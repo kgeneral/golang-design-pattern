@@ -5,13 +5,14 @@ import "log"
 type CachedYoutubeDownloader struct {
 	service    ThirdPartyYoutubeLib
 	listCache  []string
-	videoCache [][]byte
+	videoCache map[string]bool
 	needReset  bool
 }
 
 func NewCachedYoutubeDownloader(service ThirdPartyYoutubeLib) CachedYoutubeDownloader {
 	return CachedYoutubeDownloader{
-		service: service,
+		service:    service,
+		videoCache: make(map[string]bool),
 	}
 }
 
@@ -29,11 +30,14 @@ func (yd CachedYoutubeDownloader) GetVideoInfo(id string) {
 func (yd CachedYoutubeDownloader) DownloadVideo(id string) string {
 	if !yd.downloadExists(id) || yd.needReset {
 		yd.service.DownloadVideo(id)
+		yd.videoCache[id] = true
+	} else {
+		log.Println("cached video :", id)
 	}
 
-	return ""
+	return id
 }
 
 func (yd CachedYoutubeDownloader) downloadExists(id string) bool {
-	return false
+	return yd.videoCache[id]
 }

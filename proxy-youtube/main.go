@@ -2,6 +2,7 @@ package main
 
 import (
 	"golang-design-pattern/proxy-youtube/proxy"
+	"log"
 )
 
 func main() {
@@ -10,8 +11,11 @@ func main() {
 
 	videoId := "X-350W_gwjY"
 	// naive download
-	downloader.DownloadVideo(videoId)
+	var id = downloader.DownloadVideo(videoId)
+	log.Println("video downloaded :", id)
+
 	// cached download
-	downloader.DownloadVideo(videoId)
+	id = downloader.DownloadVideo(videoId)
+	log.Println("video downloaded :", id)
 
 }
